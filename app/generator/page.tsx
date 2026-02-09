@@ -14,17 +14,17 @@ export default function Generator() {
     const [course, setCourse] = useState('')
     const [downloadMethod, setDownloadMethod] = useState('')
 
-    const canvasRef = useRef()
-    const [userPicture, setProfilePicture] = useState(null)
+    const canvasRef = useRef<HTMLCanvasElement>(null)
+    const [userPicture, setProfilePicture] = useState<HTMLImageElement | null>(null)
 
     // Drag events helpers
-    const handleDrag = (e, dragging) => {
+    const handleDrag = (e: React.DragEvent<HTMLLabelElement>, dragging: boolean) => {
         e.preventDefault()
         e.stopPropagation()
         setIsDragging(dragging)
     }
 
-    const handleDrop = (e) => {
+    const handleDrop = (e: React.DragEvent<HTMLLabelElement>) => {
         e.preventDefault()
         e.stopPropagation()
         setIsDragging(false)
@@ -35,7 +35,7 @@ export default function Generator() {
 
             reader.onload = () => {
                 const img = new Image()
-                img.src = reader.result
+                img.src = reader.result as string
                 img.crossOrigin = 'anonymous'
                 img.onload = () => setProfilePicture(img)
 
@@ -47,19 +47,19 @@ export default function Generator() {
         }
     }
 
-    const handleDownloadMethod = (event) => {
+    const handleDownloadMethod = (event: React.ChangeEvent<HTMLInputElement>) => {
         setDownloadMethod(event.target.value)
     }
 
-    const handleProfileImage = (event) => {
-        const file = event.target.files[0]
+    const handleProfileImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0]
         if (!file) return
 
         const reader = new FileReader()
 
         reader.onload = () => {
             const img = new Image()
-            img.src = reader.result
+            img.src = reader.result as string
             img.crossOrigin = 'anonymous'
             img.onload = () => setProfilePicture(img)
             setFileLoad(true)
@@ -81,7 +81,11 @@ export default function Generator() {
             await imgBg.decode()
 
             const finalCanvas = canvasRef.current
+            if (!finalCanvas) return
+            
             const ctx = finalCanvas.getContext('2d')
+            if (!ctx) return
+            
             finalCanvas.width = imgBg.width
             finalCanvas.height = imgBg.height
             ctx.drawImage(imgBg, 0, 0, imgBg.width, imgBg.height)
@@ -118,7 +122,6 @@ export default function Generator() {
                     width: 10.74,
                     height: 114,
                     displayValue: false,
-                    fit: false,
                     margin: 0,
                     background: '#F6F6ED',
                     lineColor: '#333333'
@@ -202,7 +205,9 @@ export default function Generator() {
         }
     }
 
-    const downloadImage = (method) => {
+    const downloadImage = (method: string) => {
+        if (!canvasRef.current) return
+        
         const link = document.createElement('a')
         switch (method) {
             case 'name':

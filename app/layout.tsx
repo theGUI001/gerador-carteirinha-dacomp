@@ -1,12 +1,13 @@
 import './globals.css'
-import { Navbar } from '@/components/Navbar'
+import { Navbar } from '@/app/components/Navbar'
+import { Metadata } from 'next'
 
-export const metadata = {
+export const metadata: Metadata = {
     title: 'Gerador de Carteirinhas DACOMP',
     description: 'Gere carteirinhas de estudantes da UTFPR',
 }
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="pt-BR">
             <head>

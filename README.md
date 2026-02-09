@@ -1,6 +1,6 @@
 # Gerador de carteirinha
 
-Projeto feito em [Next.js 16](https://nextjs.org/) com [Tailwind CSS](https://tailwindcss.com/). Um gerador de carteirinhas para os estudantes da UTFPR, campus Cornélio Procópio, em parceria com o diretório [DACOMP](https://www.instagram.com/dacompcp/).
+Projeto feito em [Next.js 16](https://nextjs.org/) com [TypeScript](https://www.typescriptlang.org/) e [Tailwind CSS](https://tailwindcss.com/). Um gerador de carteirinhas para os estudantes da UTFPR, campus Cornélio Procópio, em parceria com o diretório [DACOMP](https://www.instagram.com/dacompcp/).
 
 ## Deploy no Github Pages
 
@@ -9,6 +9,22 @@ O projeto está disponível nessa [página](https://mateusmcamargo.github.io/ger
 ## Como executar localmente
 
 Para executar o projeto localmente:
+
+### Com Bun (recomendado)
+
+```bash
+# Instalar as dependências
+bun install
+
+# Executar em modo de desenvolvimento
+bun dev
+
+# Ou fazer o build e executar em produção
+bun run build
+bun start
+```
+
+### Com npm
 
 ```bash
 # Instalar as dependências
@@ -22,7 +38,16 @@ npm run build
 npm start
 ```
 
-Acesse `http://localhost:3000/gerador-carteirinha/generator` no seu navegador.
+Acesse `http://localhost:3000` no seu navegador (em desenvolvimento) ou `http://localhost:3000/gerador-carteirinha/generator` (em produção).
+
+## Tecnologias
+
+- **Next.js 16** - Framework React com App Router
+- **TypeScript** - Tipagem estática para JavaScript
+- **Tailwind CSS** - Framework CSS utility-first
+- **Bun** - Runtime JavaScript moderno e rápido (opcional, mas recomendado)
+- **QRCode** - Geração de códigos QR
+- **JsBarcode** - Geração de códigos de barras
 
 ## Funcionalidades
 
