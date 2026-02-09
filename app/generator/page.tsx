@@ -1,18 +1,18 @@
-'use client'
+"use client"
 
-import { useRef, useState } from 'react'
-import QRCode from 'qrcode'
-import JsBarcode from 'jsbarcode'
+import { useRef, useState } from "react"
+import QRCode from "qrcode"
+import JsBarcode from "jsbarcode"
 
 export default function Generator() {
-    const [textRA, setTextRA] = useState('')
+    const [textRA, setTextRA] = useState("")
     const [generated, setGenerated] = useState(false)
     const [fileLoad, setFileLoad] = useState(false)
     const [isDragging, setIsDragging] = useState(false)
-    const [fileName, setFileName] = useState('Clique para escolher uma imagem ou solte uma aqui...')
-    const [name, setName] = useState('')
-    const [course, setCourse] = useState('')
-    const [downloadMethod, setDownloadMethod] = useState('')
+    const [fileName, setFileName] = useState("Clique para escolher uma imagem ou solte uma aqui...")
+    const [name, setName] = useState("")
+    const [course, setCourse] = useState("")
+    const [downloadMethod, setDownloadMethod] = useState("")
 
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const [userPicture, setProfilePicture] = useState<HTMLImageElement | null>(null)
@@ -36,7 +36,7 @@ export default function Generator() {
             reader.onload = () => {
                 const img = new Image()
                 img.src = reader.result as string
-                img.crossOrigin = 'anonymous'
+                img.crossOrigin = "anonymous"
                 img.onload = () => setProfilePicture(img)
 
                 setFileLoad(true)
@@ -60,7 +60,7 @@ export default function Generator() {
         reader.onload = () => {
             const img = new Image()
             img.src = reader.result as string
-            img.crossOrigin = 'anonymous'
+            img.crossOrigin = "anonymous"
             img.onload = () => setProfilePicture(img)
             setFileLoad(true)
             setFileName(file.name)
@@ -72,9 +72,9 @@ export default function Generator() {
     const generateImage = async () => {
         try {
             const imgBg = new Image()
-            imgBg.crossOrigin = 'anonymous'
+            imgBg.crossOrigin = "anonymous"
             // Detecta se estamos rodando com basePath (produção) ou não (dev)
-            const basePath = window.location.pathname.startsWith('/gerador-carteirinha') ? '/gerador-carteirinha' : ''
+            const basePath = window.location.pathname.startsWith("/gerador-carteirinha") ? "/gerador-carteirinha" : ""
             imgBg.src = `${basePath}/carteirinha_em_branco.svg`
             imgBg.width = 1430
             imgBg.height = 904
@@ -82,28 +82,28 @@ export default function Generator() {
 
             const finalCanvas = canvasRef.current
             if (!finalCanvas) return
-            
-            const ctx = finalCanvas.getContext('2d')
+
+            const ctx = finalCanvas.getContext("2d")
             if (!ctx) return
-            
+
             finalCanvas.width = imgBg.width
             finalCanvas.height = imgBg.height
             ctx.drawImage(imgBg, 0, 0, imgBg.width, imgBg.height)
 
             if (textRA.trim()) {
-                const qrCanvas = document.createElement('canvas')
+                const qrCanvas = document.createElement("canvas")
                 let newTextRA = textRA.toString()
-                if (textRA.charAt(0) !== '0') {
-                    newTextRA = '0' + newTextRA
+                if (textRA.charAt(0) !== "0") {
+                    newTextRA = "0" + newTextRA
                 }
 
                 await QRCode.toCanvas(qrCanvas, newTextRA, {
                     width: 285,
                     margin: 0,
                     color: {
-                        light: '#F6F6ED',
-                        dark: '#333333'
-                    }
+                        light: "#F6F6ED",
+                        dark: "#333333",
+                    },
                 })
 
                 try {
@@ -111,20 +111,20 @@ export default function Generator() {
                     const posY = finalCanvas.height - qrCanvas.height - 396
                     ctx.drawImage(qrCanvas, posX, posY)
                 } catch (err) {
-                    console.error('Erro ao desenhar QR code:', err)
+                    console.error("Erro ao desenhar QR code:", err)
                 }
 
-                const barcodeCanvas = document.createElement('canvas')
-                barcodeCanvas.getContext('2d')
+                const barcodeCanvas = document.createElement("canvas")
+                barcodeCanvas.getContext("2d")
 
                 JsBarcode(barcodeCanvas, newTextRA, {
-                    format: 'CODE128',
+                    format: "CODE128",
                     width: 10.74,
                     height: 114,
                     displayValue: false,
                     margin: 0,
-                    background: '#F6F6ED',
-                    lineColor: '#333333'
+                    background: "#F6F6ED",
+                    lineColor: "#333333",
                 })
 
                 try {
@@ -132,12 +132,12 @@ export default function Generator() {
                     const posY = finalCanvas.height - barcodeCanvas.height - 203
                     ctx.drawImage(barcodeCanvas, posX, posY)
                 } catch (err) {
-                    console.error('Erro ao desenhar código de barras:', err)
+                    console.error("Erro ao desenhar código de barras:", err)
                 }
             }
 
-            ctx.fillStyle = '#333'
-            ctx.textAlign = 'left'
+            ctx.fillStyle = "#333"
+            ctx.textAlign = "left"
 
             const textXStart = 488
             const textYName = 254
@@ -145,30 +145,30 @@ export default function Generator() {
             const textYUni = textYName + textYNameMargin
             const textYMargin = 56
 
-            ctx.font = 'bold 34px sans-serif'
+            ctx.font = "bold 34px sans-serif"
             ctx.fillText(name, textXStart, textYName)
 
-            ctx.font = '32px sans-serif'
-            ctx.fillText('Universidade Tecnológica Federal', textXStart, textYUni)
+            ctx.font = "32px sans-serif"
+            ctx.fillText("Universidade Tecnológica Federal", textXStart, textYUni)
 
-            ctx.fillText(course, textXStart, textYUni + (textYMargin * 1))
+            ctx.fillText(course, textXStart, textYUni + textYMargin * 1)
 
-            ctx.font = 'bold 32px sans-serif'
-            ctx.fillText('Data de validade: ', textXStart, textYUni + (textYMargin * 2))
-            const textWidthDate = ctx.measureText('Data de validade: ').width
+            ctx.font = "bold 32px sans-serif"
+            ctx.fillText("Data de validade: ", textXStart, textYUni + textYMargin * 2)
+            const textWidthDate = ctx.measureText("Data de validade: ").width
 
-            ctx.font = '32px sans-serif'
-            ctx.fillText('31/12/2025', textXStart + textWidthDate, textYUni + (textYMargin * 2))
+            ctx.font = "32px sans-serif"
+            ctx.fillText("31/12/2025", textXStart + textWidthDate, textYUni + textYMargin * 2)
 
-            ctx.font = 'bold 32px sans-serif'
-            ctx.fillText('Registro de aluno: ', textXStart, textYUni + (textYMargin * 3))
-            const textWidthRegistration = ctx.measureText('Registro de aluno: ').width
+            ctx.font = "bold 32px sans-serif"
+            ctx.fillText("Registro de aluno: ", textXStart, textYUni + textYMargin * 3)
+            const textWidthRegistration = ctx.measureText("Registro de aluno: ").width
 
-            ctx.font = '32px sans-serif'
-            if (textRA.charAt(0) === '0') {
-                ctx.fillText(textRA.slice(1), textXStart + textWidthRegistration, textYUni + (textYMargin * 3))
+            ctx.font = "32px sans-serif"
+            if (textRA.charAt(0) === "0") {
+                ctx.fillText(textRA.slice(1), textXStart + textWidthRegistration, textYUni + textYMargin * 3)
             } else {
-                ctx.fillText(textRA, textXStart + textWidthRegistration, textYUni + (textYMargin * 3))
+                ctx.fillText(textRA, textXStart + textWidthRegistration, textYUni + textYMargin * 3)
             }
 
             if (userPicture) {
@@ -190,33 +190,27 @@ export default function Generator() {
                     cropY = (img.height - cropHeight) / 2
                 }
 
-                ctx.drawImage(
-                    img,
-                    cropX, cropY,
-                    cropWidth, cropHeight,
-                    98, 224,
-                    358, 477
-                )
+                ctx.drawImage(img, cropX, cropY, cropWidth, cropHeight, 98, 224, 358, 477)
             }
 
             setGenerated(true)
         } catch (finalErr) {
-            console.error('Erro geral na geração da imagem:', finalErr)
+            console.error("Erro geral na geração da imagem:", finalErr)
         }
     }
 
     const downloadImage = (method: string) => {
         if (!canvasRef.current) return
-        
-        const link = document.createElement('a')
+
+        const link = document.createElement("a")
         switch (method) {
-            case 'name':
+            case "name":
                 link.download = `${name.toUpperCase()}.png`
                 break
-            case 'code':
+            case "code":
                 link.download = `${textRA}.png`
                 break
-            case 'both':
+            case "both":
                 link.download = `${textRA}-${name.toUpperCase()}.png`
                 break
         }
@@ -234,23 +228,14 @@ export default function Generator() {
                         <div className="space-y-2">
                             <label className="block text-sm font-semibold text-gray-700">Foto do aluno</label>
                             <label
-                                className={`flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-lg cursor-pointer transition-all ${isDragging
-                                    ? 'border-blue-500 bg-blue-50'
-                                    : fileLoad
-                                        ? 'border-green-500 bg-green-50'
-                                        : 'border-gray-300 bg-gray-50 hover:bg-gray-100'
-                                    }`}
+                                className={`flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-lg cursor-pointer transition-all ${
+                                    isDragging ? "border-blue-500 bg-blue-50" : fileLoad ? "border-green-500 bg-green-50" : "border-gray-300 bg-gray-50 hover:bg-gray-100"
+                                }`}
                                 onDragOver={(event) => handleDrag(event, true)}
                                 onDragLeave={(event) => handleDrag(event, false)}
-                                onDrop={handleDrop}
-                            >
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleProfileImage}
-                                    className="hidden"
-                                />
-                                <i className={`text-4xl mb-3 ${fileLoad ? 'fa-solid fa-file-image text-green-500' : 'fa-solid fa-file-import text-gray-400'}`}></i>
+                                onDrop={handleDrop}>
+                                <input type="file" accept="image/*" onChange={handleProfileImage} className="hidden" />
+                                <i className={`text-4xl mb-3 ${fileLoad ? "fa-solid fa-file-image text-green-500" : "fa-solid fa-file-import text-gray-400"}`}></i>
                                 <span className="text-sm text-gray-600 text-center px-4">{fileName}</span>
                             </label>
                         </div>
@@ -283,8 +268,7 @@ export default function Generator() {
                                 <select
                                     value={course}
                                     onChange={(event) => setCourse(event.target.value)}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-white"
-                                >
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-white">
                                     <option value="">Selecione o curso</option>
                                     <option value="Engenharia de Computação">Engenharia de Computação</option>
                                     <option value="Engenharia de Software">Engenharia de Software</option>
@@ -294,16 +278,13 @@ export default function Generator() {
                             </div>
                         </div>
 
-                        <button
-                            onClick={generateImage}
-                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors shadow-md"
-                        >
+                        <button onClick={generateImage} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors shadow-md">
                             Gerar Carteirinha
                         </button>
                     </div>
                 </section>
 
-                <section className={`bg-white rounded-lg shadow-lg p-8 ${generated ? '' : 'hidden'}`}>
+                <section className={`bg-white rounded-lg shadow-lg p-8 ${generated ? "" : "hidden"}`}>
                     <div className="flex flex-col items-center space-y-6">
                         <canvas ref={canvasRef} className="max-w-full h-auto border border-gray-200 rounded-lg shadow-md"></canvas>
 
@@ -318,7 +299,7 @@ export default function Generator() {
                                                 id="radio-name"
                                                 name="download"
                                                 value="name"
-                                                checked={downloadMethod === 'name'}
+                                                checked={downloadMethod === "name"}
                                                 onChange={handleDownloadMethod}
                                                 className="w-4 h-4 text-blue-600"
                                             />
@@ -331,7 +312,7 @@ export default function Generator() {
                                                 id="radio-code"
                                                 name="download"
                                                 value="code"
-                                                checked={downloadMethod === 'code'}
+                                                checked={downloadMethod === "code"}
                                                 onChange={handleDownloadMethod}
                                                 className="w-4 h-4 text-blue-600"
                                             />
@@ -344,7 +325,7 @@ export default function Generator() {
                                                 id="radio-both"
                                                 name="download"
                                                 value="both"
-                                                checked={downloadMethod === 'both'}
+                                                checked={downloadMethod === "both"}
                                                 onChange={handleDownloadMethod}
                                                 className="w-4 h-4 text-blue-600"
                                             />
@@ -355,8 +336,7 @@ export default function Generator() {
 
                                 <button
                                     onClick={() => downloadImage(downloadMethod)}
-                                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition-colors shadow-md"
-                                >
+                                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition-colors shadow-md">
                                     Baixar Carteirinha
                                 </button>
                             </div>
