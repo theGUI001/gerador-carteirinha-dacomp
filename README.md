@@ -1,10 +1,28 @@
 # Gerador de carteirinha
 
-Projeto feito em [React](https://react.dev/). Um gerador de carteirinhas para os estudantes da UTFPR, campus Cornélio Procópio, em parceria com o diretório [DACOMP](https://www.instagram.com/dacompcp/).
+Projeto feito em [Next.js 16](https://nextjs.org/) com [Tailwind CSS](https://tailwindcss.com/). Um gerador de carteirinhas para os estudantes da UTFPR, campus Cornélio Procópio, em parceria com o diretório [DACOMP](https://www.instagram.com/dacompcp/).
 
 ## Deploy no Github Pages
 
 O projeto está disponível nessa [página](https://mateusmcamargo.github.io/gerador-carteirinha/)
+
+## Como executar localmente
+
+Para executar o projeto localmente:
+
+```bash
+# Instalar as dependências
+npm install
+
+# Executar em modo de desenvolvimento
+npm run dev
+
+# Ou fazer o build e executar em produção
+npm run build
+npm start
+```
+
+Acesse `http://localhost:3000/gerador-carteirinha/generator` no seu navegador.
 
 ## Funcionalidades
 
